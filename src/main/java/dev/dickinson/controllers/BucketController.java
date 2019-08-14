@@ -13,6 +13,7 @@ import dev.dickinson.services.AmazonClient;
 //@RequestMapping("/storage/")
 public class BucketController {
 
+	@Autowired
     private AmazonClient amazonClient;
 
     @Autowired

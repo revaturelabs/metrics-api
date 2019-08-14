@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import dev.dickinson.controllers.BucketController;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses = BucketController.class)
+@ComponentScan("dev.dickinson")
 public class MetricsBucketApplication {
 
 	public static void main(String[] args) {
