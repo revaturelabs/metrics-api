@@ -58,8 +58,8 @@ public class BucketController {
            sts_client.getSessionToken(session_token_request);
         Credentials session_creds = session_token_result.getCredentials();
         Gson gson = new Gson();
-        String returnData = "{"+gson.toJson(session_creds); 
-        returnData+= gson.toJson(session_token_request)+"}";
+        String returnData = "{'arr':["+gson.toJson(session_creds) +","; 
+        returnData+= gson.toJson(session_token_request)+"]}";
         return returnData;
     }
     
