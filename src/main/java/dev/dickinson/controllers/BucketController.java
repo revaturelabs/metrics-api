@@ -51,7 +51,8 @@ public class BucketController {
     @RequestMapping(value="/tokens", method=RequestMethod.GET)
     public String getCreds() {
         System.out.println("GET TOKEN CALLED");
-        AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder.standard().withRegion("us-east-2").build();
+        //TODO: if the region changes this needs to be updated.
+        AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder.standard().build();
         GetSessionTokenRequest session_token_request = new GetSessionTokenRequest();
         session_token_request.setDurationSeconds(7200); // optional.
         GetSessionTokenResult session_token_result =
