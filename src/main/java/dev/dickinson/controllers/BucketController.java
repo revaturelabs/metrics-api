@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
-import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
-import com.amazonaws.services.securitytoken.model.Credentials;
-import com.amazonaws.services.securitytoken.model.GetSessionTokenRequest;
-import com.amazonaws.services.securitytoken.model.GetSessionTokenResult;
-import com.google.gson.Gson;
 
 import dev.dickinson.services.AmazonClient;
 
@@ -52,16 +46,8 @@ public class BucketController {
     public String getCreds() {
         System.out.println("GET TOKEN CALLED");
         //TODO: if the region changes this needs to be updated.
-        AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder.standard().build();
-        GetSessionTokenRequest session_token_request = new GetSessionTokenRequest();
-        session_token_request.setDurationSeconds(7200); // optional.
-        GetSessionTokenResult session_token_result =
-           sts_client.getSessionToken(session_token_request);
-        Credentials session_creds = session_token_result.getCredentials();
-        Gson gson = new Gson();
-        String returnData = "{\"arr\":["+gson.toJson(session_creds) +","; 
-        returnData+= gson.toJson(session_token_request)+"]}";
-        return returnData;
+        return this.amazonClient.getCredentials();
+
     }
     
     

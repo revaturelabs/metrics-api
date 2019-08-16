@@ -18,6 +18,12 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
+import com.amazonaws.services.securitytoken.model.Credentials;
+import com.amazonaws.services.securitytoken.model.GetSessionTokenRequest;
+import com.amazonaws.services.securitytoken.model.GetSessionTokenResult;
+import com.google.gson.Gson;
 
 @Service
 public class AmazonClient {
@@ -75,6 +81,19 @@ public class AmazonClient {
 		String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 		s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
 		return "Successfully deleted";
+	}
+	
+	public String getCredentials() {
+      AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder.standard().build();
+      GetSessionTokenRequest session_token_request = new GetSessionTokenRequest();
+      session_token_request.setDurationSeconds(7200); // optional.
+      GetSessionTokenResult session_token_result =
+         sts_client.getSessionToken(session_token_request);
+      Credentials session_creds = session_token_result.getCredentials();
+      Gson gson = new Gson();
+      String returnData = "{\"arr\":["+gson.toJson(session_creds) +","; 
+      returnData+= gson.toJson(session_token_request)+"]}";
+      return returnData;
 	}
 
 }
