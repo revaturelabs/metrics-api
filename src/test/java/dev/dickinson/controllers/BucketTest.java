@@ -18,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.Assert;
 
+import dev.dickinson.services.AmazonClient;
+
 //import dev.ateam.entities.Build;
 //import dev.ateam.services.BuildService;
 
@@ -29,9 +31,20 @@ import org.springframework.util.Assert;
 
 class BucketTest {
 
-//  @Test
-//  void test() {
-//    fail();
-//  }
+  @Autowired
+  private AmazonClient amazonClient;
+  @Test
+  void tokenCreationTest() {
+    try {
+      String verifyData = amazonClient.getCredentials();
+      if (verifyData.contains("{\"arr\":[")){
+        //passes
+      }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
 
 }
