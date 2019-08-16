@@ -50,6 +50,10 @@ public class BucketController {
 
     }
     
-    
+    @RequestMapping(value="/listBucketFiles", method=RequestMethod.GET)
+    public String listBucketFiles() {
+    	System.out.println("listBucketFiles called in controller.");
+    	return this.amazonClient.listBucketFiles();
+    }
     
 }
