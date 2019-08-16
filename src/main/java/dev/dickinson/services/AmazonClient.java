@@ -3,7 +3,10 @@ package dev.dickinson.services;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -17,7 +20,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Credentials;
@@ -82,18 +87,63 @@ public class AmazonClient {
 		s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
 		return "Successfully deleted";
 	}
-	
+
 	public String getCredentials() {
-      AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder.standard().build();
-      GetSessionTokenRequest session_token_request = new GetSessionTokenRequest();
-      session_token_request.setDurationSeconds(7200); // optional.
-      GetSessionTokenResult session_token_result =
-         sts_client.getSessionToken(session_token_request);
-      Credentials session_creds = session_token_result.getCredentials();
-      Gson gson = new Gson();
-      String returnData = "{\"arr\":["+gson.toJson(session_creds) +","; 
-      returnData+= gson.toJson(session_token_request)+"]}";
-      return returnData;
+		AWSSecurityTokenServiceClient sts_client = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder
+				.standard().build();
+		GetSessionTokenRequest session_token_request = new GetSessionTokenRequest();
+		session_token_request.setDurationSeconds(7200); // optional.
+		GetSessionTokenResult session_token_result = sts_client.getSessionToken(session_token_request);
+		Credentials session_creds = session_token_result.getCredentials();
+		Gson gson = new Gson();
+		String returnData = "{\"arr\":[" + gson.toJson(session_creds) + ",";
+		returnData += gson.toJson(session_token_request) + "]}";
+		return returnData;
 	}
+
+	public String listAllSprintFiles() {
+		System.out.println("listAllSprintFiles called in AmazonClient");
+
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+
+		for (S3ObjectSummary s : objects) {
+			System.out.println("One object summary: " + s);
+		}
+
+		return objects.toString();
+	}
+
+	public String listSprintFilesByProject(String projectName) {
+		System.out.println("listSprintFilesByProject called in AmazonClient");
+
+		ObjectListing ol = s3client.listObjects(bucketName,projectName+"/");
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+
+		for (S3ObjectSummary s : objects) {
+			System.out.println("One object summary: " + s);
+		}
+
+		return objects.toString();
+	}
+	
+	public String listSprintFilesByFileName(String fileName) {
+		System.out.println("listSprintFilesByFileName called in AmazonClient");
+
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		
+		List<S3ObjectSummary> filteredObjects = objects.stream().filter(o-> o.getKey().contains("derserserterstferl.txt"))
+				.collect(Collectors.toList());
+
+		for (S3ObjectSummary s : filteredObjects) {
+			System.out.println("One object summary: " + s);
+		}
+
+		return filteredObjects.toString();
+	}
+	
+	
+	
 
 }
