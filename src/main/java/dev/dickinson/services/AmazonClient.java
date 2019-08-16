@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -15,9 +16,12 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Credentials;
@@ -94,6 +98,27 @@ public class AmazonClient {
       String returnData = "{\"arr\":["+gson.toJson(session_creds) +","; 
       returnData+= gson.toJson(session_token_request)+"]}";
       return returnData;
+	}
+	
+	public String listBucketFiles() {
+		System.out.println("listBucketFiles called in AmazonClient");
+		
+//		List<Bucket> buckets = s3client.listBuckets();
+//        System.out.println("Your Amazon S3 buckets are:");
+//        for(Bucket b : buckets) {
+//            System.out.println("* " + b.getName());
+//        }
+//		
+//        return "";
+        
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		
+		for(S3ObjectSummary s: objects) {
+			System.out.println("One object summary: "+s);
+		}
+		
+		return objects.toString();
 	}
 
 }
