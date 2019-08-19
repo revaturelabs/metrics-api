@@ -67,6 +67,10 @@ public class BucketController {
     	return this.amazonClient.listSprintFilesByFileName(fileName);
     }
     
-    
+    @RequestMapping(value="/downloadFile",method=RequestMethod.GET)
+    public void downloadFile(@RequestPart(value="fileName") String fileName) {
+    	System.out.println("downloadFile called in controller");
+    	this.amazonClient.downloadFile(fileName);
+    }
     
 }
