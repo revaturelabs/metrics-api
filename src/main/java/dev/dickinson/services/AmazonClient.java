@@ -1,9 +1,11 @@
 package dev.dickinson.services;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -122,7 +125,7 @@ public class AmazonClient {
 	public String listSprintFilesByProject(String projectName) {
 		System.out.println("listSprintFilesByProject called in AmazonClient");
 
-		ObjectListing ol = s3client.listObjects(bucketName,projectName+"/");
+		ObjectListing ol = s3client.listObjects(bucketName, projectName + "/");
 		List<S3ObjectSummary> objects = ol.getObjectSummaries();
 
 		for (S3ObjectSummary s : objects) {
@@ -131,15 +134,15 @@ public class AmazonClient {
 
 		return objects.toString();
 	}
-	
+
 	public String listSprintFilesByFileName(String fileName) {
 		System.out.println("listSprintFilesByFileName called in AmazonClient");
 
 		ObjectListing ol = s3client.listObjects(bucketName);
 		List<S3ObjectSummary> objects = ol.getObjectSummaries();
-		
-		List<S3ObjectSummary> filteredObjects = objects.stream().filter(o-> o.getKey().contains("derserserterstferl.txt"))
-				.collect(Collectors.toList());
+
+		List<S3ObjectSummary> filteredObjects = objects.stream()
+				.filter(o -> o.getKey().contains("derserserterstferl.txt")).collect(Collectors.toList());
 
 		for (S3ObjectSummary s : filteredObjects) {
 			System.out.println("One object summary: " + s);
@@ -147,41 +150,90 @@ public class AmazonClient {
 
 		return filteredObjects.toString();
 	}
-	
-	public void downloadFile(String keyName) {
-		System.out.println("downloadFile called in AmazonClient");
-		
+
+	public void downloadFile(String folderPath, String fileName) {
 		String bucketName = "metricbuckettest";
-		String folderpath = "example2";
-		String filename = "derserserterstferl.txt";
-		keyName = "example2/derserserterstferl.txt";
+
 		try {
-	        S3Object o = s3client.getObject(new GetObjectRequest(bucketName, folderpath + "/" + filename));
-	        System.out.println(o);
-	        S3ObjectInputStream s3is = o.getObjectContent();
-	        // Save the file to the Desktop
-	        FileOutputStream fos = new FileOutputStream(new File("C:\\Users\\User\\Desktop/" + filename));
-	        byte[] read_buf = new byte[1024];
-	        int read_len = 0;
-	        while ((read_len = s3is.read(read_buf)) > 0) {
-	            fos.write(read_buf, 0, read_len);
-	        }
-	        
-	        s3is.close();
-	        fos.close();
-	    } catch (AmazonServiceException e) {
-	        System.err.println(e.getErrorMessage());
-	        System.out.println("Oh hai mark. This is an AmazonServiceException.");
-	    } catch (FileNotFoundException e) {
-	        System.err.println(e.getMessage());
-	        System.out.println("How's your love life? This is a FileNotFoundException.");
-	    } catch (IOException e) {
-	        System.err.println(e.getMessage());
-	        System.out.println("YOu'rE TeaRing mE aPart LisA!");
-	    }
-	    System.out.println("Done!");
+			S3Object o = s3client.getObject(new GetObjectRequest(bucketName, folderPath + "/" + fileName));
+			S3ObjectInputStream s3is = o.getObjectContent();
+			// Save the file to the Desktop
+			FileOutputStream fos = new FileOutputStream(new File(fileName));
+			byte[] read_buf = new byte[1024];
+			int read_len = 0;
+			while ((read_len = s3is.read(read_buf)) > 0) {
+				fos.write(read_buf, 0, read_len);
+			}
+
+			s3is.close();
+			fos.close();
+		} catch (AmazonServiceException e) {
+			System.err.println(e.getErrorMessage());
+		} catch (FileNotFoundException e) {
+			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
 	}
-	
-	
+
+	public void createProject(String projectName) {
+		try {
+
+			InputStream input = new ByteArrayInputStream(new byte[0]);
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentLength(0);
+
+			s3client.putObject(new PutObjectRequest(bucketName, projectName+"/", input, metadata));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void createSprint(String projectName, String sprintName) {
+		String reportName = "report";
+
+		try {
+
+			InputStream input = new ByteArrayInputStream(new byte[0]);
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentLength(0);
+
+			s3client.putObject(new PutObjectRequest(bucketName, projectName+"/"+sprintName+"/", input, metadata));
+			
+			s3client.putObject(new PutObjectRequest(bucketName, projectName+"/"+sprintName+"/"+reportName+"/", input, metadata));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String uploadReportFile(String projectName, String sprintName, MultipartFile multipartFile) {
+		projectName = "Project1";
+		sprintName = "Sprint1";
+		final String reportName = "report";
+		
+		
+//		String startDate;
+//		String endDate;
+//		String trainers[];
+//		String observers[];
+//		int completedSPs;
+//		int assignedSPs;
+
+		String fileUrl = "";
+		try {
+			File file = convertMultiPartToFile(multipartFile);
+			String fileName = generateFileName(multipartFile);
+			fileUrl = projectName+"/"+sprintName+"/"+reportName+"/" + fileName;
+//			uploadFileTos3bucket(fileName, file);
+			uploadFileTos3bucket(fileUrl, file);
+			file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(fileUrl);
+		return fileUrl;
+	}
 
 }

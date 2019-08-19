@@ -68,9 +68,28 @@ public class BucketController {
     }
     
     @RequestMapping(value="/downloadFile",method=RequestMethod.GET)
-    public void downloadFile(@RequestPart(value="fileName") String fileName) {
+    public void downloadFile(@RequestPart(value="folderPath") String folderPath, @RequestPart(value="fileName") String fileName) {
     	System.out.println("downloadFile called in controller");
-    	this.amazonClient.downloadFile(fileName);
+    	this.amazonClient.downloadFile(folderPath, fileName);
+    }
+    
+    @RequestMapping(value="createProject",method=RequestMethod.POST)
+    public void createProject(@RequestPart(value="projectName") String projectName) {
+    	System.out.println("createProject called in controller");
+    	this.amazonClient.createProject(projectName);
+    }
+    
+    @RequestMapping(value="createSprint",method=RequestMethod.POST)
+    public void createSprint(@RequestPart(value="projectName") String projectName, @RequestPart(value="sprintName") String sprintName) {
+    	System.out.println("createSprint called in controller");
+    	this.amazonClient.createSprint(projectName, sprintName);
+    }
+    
+    @RequestMapping(value="uploadReportFile",method=RequestMethod.POST)
+    public void uploadReportFile(@RequestPart(value="projectName") String projectName, @RequestPart(value="sprintName") String sprintName,
+    		@RequestPart(value = "file") MultipartFile file) {
+    	System.out.println("uploadReportFile called in controller");
+    	this.amazonClient.uploadReportFile(projectName,sprintName,file);
     }
     
 }
