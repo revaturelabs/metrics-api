@@ -95,9 +95,10 @@ public class BucketController {
     }
     
     @RequestMapping(value="uploadMultipleFiles",method=RequestMethod.POST)
-    public void uploadMultipleFiles(@RequestPart(value = "file") MultipartFile file) {
+    public void uploadMultipleFiles(@RequestPart(value="projectName") String projectName, @RequestPart(value="sprintName") String sprintName,
+    		@RequestPart(value = "file") MultipartFile[] file) {
     	System.out.println("uploadMultipleFiles called in controller");
-    	this.amazonClient.uploadMultipleFiles(file);
+    	this.amazonClient.uploadMultipleFiles(projectName, sprintName, file);
     }
     
 }

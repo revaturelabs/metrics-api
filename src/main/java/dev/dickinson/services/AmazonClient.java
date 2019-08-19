@@ -141,7 +141,12 @@ public class AmazonClient {
 		return objects.toString();
 	}
 
+	
+	
 	public String listSprintFilesByFileName(String fileName) {
+		//!!! Needs Implementation.
+		
+		
 		System.out.println("listSprintFilesByFileName called in AmazonClient");
 
 		ObjectListing ol = s3client.listObjects(bucketName);
@@ -215,24 +220,13 @@ public class AmazonClient {
 	}
 
 	public String uploadReportFile(String projectName, String sprintName, MultipartFile multipartFile) {
-		projectName = "Project1";
-		sprintName = "Sprint1";
 		final String reportName = "report";
-		
-		
-//		String startDate;
-//		String endDate;
-//		String trainers[];
-//		String observers[];
-//		int completedSPs;
-//		int assignedSPs;
 
 		String fileUrl = "";
 		try {
 			File file = convertMultiPartToFile(multipartFile);
 			String fileName = generateFileName(multipartFile);
 			fileUrl = projectName+"/"+sprintName+"/"+reportName+"/" + fileName;
-//			uploadFileTos3bucket(fileName, file);
 			uploadFileTos3bucket(fileUrl, file);
 			file.delete();
 		} catch (Exception e) {
@@ -242,11 +236,12 @@ public class AmazonClient {
 		return fileUrl;
 	}
 
-	public void uploadMultipleFiles(MultipartFile file) {
+	public void uploadMultipleFiles(String projectName, String sprintName, MultipartFile[] file) {
+		System.out.println("uploadMultipleFiles called from AmazonClient");
 		
-		uploadReportFile("Project1","Sprint1",file);
-		System.out.println(file);
-		
+		for(MultipartFile f: file) {
+			uploadReportFile(projectName,sprintName,f);
+		}
 	}
 	
 }
