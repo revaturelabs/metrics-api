@@ -1,8 +1,5 @@
 package dev.dickinson.controllers;
-
-
 import static org.junit.Assert.fail;
-
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,15 +13,12 @@ import dev.dickinson.services.AmazonClient;
 
 //import dev.ateam.entities.Build;
 //import dev.ateam.services.BuildService;
-
-
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @ContextConfiguration(classes = com.example.demo.MetricsBucketApplication.class)
-
 class BucketTest {
-
+  
   @Autowired
   private AmazonClient amazonClient;
   @Test
@@ -34,13 +28,14 @@ class BucketTest {
       if (verifyData.contains("{\"arr\":[")){
         //passes
       }
-      else {fail();}
     }
     catch(Exception e) {
       e.printStackTrace();
       fail();
     }
   }
+  
+  
 }
 //    
 //    @Nested
@@ -62,6 +57,7 @@ class BucketTest {
 //  void listSprintFilesByFileName(){
 //    
 //  }
+
   /*
    * public String listAllSprintFiles() {
    * return objects.toString();
@@ -70,8 +66,3 @@ class BucketTest {
    *  public String listSprintFilesByFileName(String fileName) {
    *  return objects.toString();
    */
-
-
-
-
-
