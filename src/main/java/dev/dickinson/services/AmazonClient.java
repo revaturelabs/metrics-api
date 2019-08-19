@@ -31,6 +31,10 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.transfer.MultipleFileUpload;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Credentials;
@@ -51,6 +55,8 @@ public class AmazonClient {
 	private String accessKey;
 	@Value("${amazonProperties.secretKey}")
 	private String secretKey;
+	
+	private final String reportName = "report";
 
 	@PostConstruct
 	private void initializeAmazon() {
@@ -236,4 +242,11 @@ public class AmazonClient {
 		return fileUrl;
 	}
 
+	public void uploadMultipleFiles(MultipartFile file) {
+		
+		uploadReportFile("Project1","Sprint1",file);
+		System.out.println(file);
+		
+	}
+	
 }

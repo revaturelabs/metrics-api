@@ -1,5 +1,7 @@
 package dev.dickinson.controllers;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,6 +92,12 @@ public class BucketController {
     		@RequestPart(value = "file") MultipartFile file) {
     	System.out.println("uploadReportFile called in controller");
     	this.amazonClient.uploadReportFile(projectName,sprintName,file);
+    }
+    
+    @RequestMapping(value="uploadMultipleFiles",method=RequestMethod.POST)
+    public void uploadMultipleFiles(@RequestPart(value = "file") MultipartFile file) {
+    	System.out.println("uploadMultipleFiles called in controller");
+    	this.amazonClient.uploadMultipleFiles(file);
     }
     
 }
