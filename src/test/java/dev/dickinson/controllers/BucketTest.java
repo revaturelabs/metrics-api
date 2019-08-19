@@ -34,11 +34,14 @@ class BucketTest {
       if (verifyData.contains("{\"arr\":[")){
         //passes
       }
+      else {fail();}
     }
     catch(Exception e) {
       e.printStackTrace();
       fail();
     }
+  }
+}
 //    
 //    @Nested
 //    @DisplayName("tests that depend on others")
@@ -68,4 +71,7 @@ class BucketTest {
    *  return objects.toString();
    */
 
-}
+
+
+
+

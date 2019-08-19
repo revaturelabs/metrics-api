@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import dev.dickinson.services.AmazonClient;
 
 @RestController
@@ -50,10 +49,24 @@ public class BucketController {
 
     }
     
-    @RequestMapping(value="/listBucketFiles", method=RequestMethod.GET)
+    @RequestMapping(value="/listAllSprintFiles", method=RequestMethod.GET)
     public String listBucketFiles() {
     	System.out.println("listBucketFiles called in controller.");
-    	return this.amazonClient.listBucketFiles();
+    	return this.amazonClient.listAllSprintFiles();
     }
+    
+    @RequestMapping(value="/listSprintFilesByProject",method=RequestMethod.GET)
+    public String listSprintFilesByProject(@RequestPart(value="projectName") String projectName) {
+    	System.out.println("listSprintFilesByProject called in controller");
+    	return this.amazonClient.listSprintFilesByProject(projectName);
+    }
+    
+    @RequestMapping(value="/listSprintFilesByFileName",method=RequestMethod.GET)
+    public String listSprintFilesByFileName(@RequestPart(value="fileName") String fileName) {
+    	System.out.println("listSprintFilesByFileName called in controller");
+    	return this.amazonClient.listSprintFilesByFileName(fileName);
+    }
+    
+    
     
 }
