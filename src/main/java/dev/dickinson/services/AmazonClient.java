@@ -195,7 +195,6 @@ public class AmazonClient {
 	}
 
 	public void downloadFile(String folderPath, String fileName) {
-		String bucketName = "metricbuckettest";
 
 		try {
 			S3Object o = s3client.getObject(new GetObjectRequest(bucketName, folderPath + "/" + fileName));
@@ -258,7 +257,7 @@ public class AmazonClient {
 		try {
 			File file = convertMultiPartToFile(multipartFile);
 			String fileName = generateFileName(multipartFile);
-			fileUrl = projectName+"/"+sprintName+"/"+reportName+"/" + fileName;
+			fileUrl = projectName+"/" +sprintName+"/" + reportName+"/" + fileName;
 			uploadFileTos3bucket(fileUrl, file);
 			file.delete();
 		} catch (Exception e) {
@@ -273,6 +272,29 @@ public class AmazonClient {
 		
 		for(MultipartFile f: file) {
 			uploadReportFile(projectName,sprintName,f);
+		}
+	}
+	
+	public void deleteProject(String projectName) {
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		
+		for(S3ObjectSummary s : objects) {
+			if(s.getKey().startsWith(projectName + "/")) {
+				s3client.deleteObject(new DeleteObjectRequest(bucketName, s.getKey()));
+			}
+		}
+		
+	}
+	
+	public void deleteSprint(String sprintName, String projectName) {
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		
+		for(S3ObjectSummary s : objects) {
+			if(s.getKey().startsWith(projectName + "/" + sprintName + "/")) {
+				s3client.deleteObject(new DeleteObjectRequest(bucketName, s.getKey()));
+			}
 		}
 	}
 	

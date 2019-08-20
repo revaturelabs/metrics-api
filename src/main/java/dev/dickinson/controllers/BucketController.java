@@ -113,4 +113,16 @@ public class BucketController {
     	this.amazonClient.uploadMultipleFiles(projectName, sprintName, file);
     }
     
+    @RequestMapping(value="/deleteProject", method=RequestMethod.DELETE)
+    public void deleteProject(@RequestPart(value = "projectName") String projectName) {
+    	System.out.println("DELETE PROJECT CALLED");
+        this.amazonClient.deleteProject(projectName);
+    }
+    
+    @RequestMapping(value="/deleteSprint", method=RequestMethod.DELETE)
+    public void deleteSprint(@RequestPart(value = "sprintName") String sprintName, @RequestPart(value="projectName") String projectName) {
+    	System.out.println("DELETE SPRINT CALLED");
+        this.amazonClient.deleteSprint(sprintName, projectName);
+    }
+    
 }
