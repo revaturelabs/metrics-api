@@ -6,9 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -31,10 +32,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.amazonaws.services.s3.transfer.MultipleFileUpload;
-import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Credentials;
@@ -115,6 +112,41 @@ public class AmazonClient {
 		return returnData;
 	}
 
+	public String listAllSprints() {
+		System.out.println("listAllSprints called in AmazonClient");
+
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		Set<S3ObjectSummary> sprints = new HashSet<S3ObjectSummary>();
+		
+		for (S3ObjectSummary s : objects) {
+			String temp = s.getKey().replaceAll("[^/]", "");
+			if(temp.length() == 2) {
+				sprints.add(s);
+			}
+		}
+
+		return sprints.toString();
+	}
+	
+	public String listAllSprintsByProject(String projectName) {
+		System.out.println("listAllSprintsByProject called in AmazonClient");
+		String reportName = "report";
+
+		ObjectListing ol = s3client.listObjects(bucketName);
+		List<S3ObjectSummary> objects = ol.getObjectSummaries();
+		Set<S3ObjectSummary> sprints = new HashSet<S3ObjectSummary>();
+		
+		for (S3ObjectSummary s : objects) {
+			String temp = s.getKey().replaceAll("[^/]", "");
+			if(s.getKey().startsWith(projectName) && temp.length() == 2) {
+				sprints.add(s);
+			}
+		}
+
+		return sprints.toString();
+	}
+	
 	public String listAllSprintFiles() {
 		System.out.println("listAllSprintFiles called in AmazonClient");
 

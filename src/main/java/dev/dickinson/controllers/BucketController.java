@@ -51,10 +51,22 @@ public class BucketController {
 
     }
     
+    @RequestMapping(value="/listAllSprints", method=RequestMethod.GET)
+    public String listBuckets() {
+    	System.out.println("listBuckets called in controller.");
+    	return this.amazonClient.listAllSprints();
+    }
+    
     @RequestMapping(value="/listAllSprintFiles", method=RequestMethod.GET)
     public String listBucketFiles() {
     	System.out.println("listBucketFiles called in controller.");
     	return this.amazonClient.listAllSprintFiles();
+    }
+    
+    @RequestMapping(value="/listAllSprintsByProject",method=RequestMethod.GET)
+    public String listAllSprintsByProject(@RequestPart(value="projectName") String projectName) {
+    	System.out.println("listAllSprintsByProject called in controller");
+    	return this.amazonClient.listAllSprintsByProject(projectName);
     }
     
     @RequestMapping(value="/listSprintFilesByProject",method=RequestMethod.GET)
