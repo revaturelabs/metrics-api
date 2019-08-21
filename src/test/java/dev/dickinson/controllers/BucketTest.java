@@ -1,6 +1,6 @@
 package dev.dickinson.controllers;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.nio.charset.StandardCharsets;
 
@@ -29,9 +29,9 @@ class BucketTest {
   @Autowired
   private AmazonClient amazonClient;
 
-  MultipartFile test = new MockMultipartFile("files", "filename.txt", "text/plain",
+  private MultipartFile testFile = new MockMultipartFile("files", "filename.txt", "text/plain",
       "hello".getBytes(StandardCharsets.UTF_8));
-  String testUrl = "";
+  private String testUrl = "";
 
   @Test
   void tokenCreationTest() {
@@ -42,21 +42,15 @@ class BucketTest {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      fail();
+      fail("failed in token creation");
     }
   }
 
   @Test
   @Order(1)
   void uploadFileTest() {
-    testUrl = amazonClient.uploadFile(test);
+    testUrl = amazonClient.uploadFile(testFile);
     System.out.println(testUrl);
-  }
-
-  @Test
-  @Order(2)
-  void listAllSprintFilesTest() {
-    System.out.println(amazonClient.listAllSprintFiles());
   }
 
   @Test
@@ -66,20 +60,54 @@ class BucketTest {
   }
 
   @Test
-  void listSprintFilesByProjectTest() {
-    System.out.println("listSprintFilesByProjectTest() unimplemented");
+  @Order(1)
+  // check for exception test
+  void createProject() {
+    amazonClient.createProject("test_project_to_delete");
+  }
+
+  @Test
+  @Order(2)
+//check for exception test
+  void deleteProjectTest() {
+    amazonClient.deleteProject("test_project_to_delete");
+  }
+
+  @Test
+  @Order(3)
+  void createSprintAndTest() {
+    amazonClient.createSprint("test_project_to_delete", "test_sprint_to_delete");
+  }
+
+  @Test
+  @Order(4)
+  void addFilesToSprintTest() {
+    MultipartFile[] testFileArray = new MockMultipartFile[1];
+    testFileArray[0] = testFile;
+    amazonClient.uploadMultipleFiles("test_project_to_delete", "test_sprint_to_delete", testFileArray);
   }
   
   @Test
-  void listSprintFilesByFileNameTest() {
-    System.out.println("listSprintFilesByFileNameTest() unimplemented");
+  @Order(5)
+  void listAllSprintsTest() {
+    String testStr = amazonClient.listAllSprints();
+    if(testStr.contains("test_sprint_to_delete")) {
+      
+    }else {
+      fail("failed to find the file in our sprint");
+    }
   }
+
+  @Test
+  @Order(6)//verify that the files placed in the sprint
+  void listAllSprintFilesTest() {
+    String testString = amazonClient.listAllSprintFiles();
+    if(testString.contains("filename.txt")) {
+      
+    }else {
+      fail("failed to find the file in our sprint");
+    }
+  }
+
+
 }
-
-
-/*
- * public String listAllSprintFiles() { return objects.toString(); public String
- * listSprintFilesByProject(String projectName) { return objects.toString();
- * public String listSprintFilesByFileName(String fileName) { return
- * objects.toString();
- */
