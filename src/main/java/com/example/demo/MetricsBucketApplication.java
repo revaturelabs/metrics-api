@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("dev.dickinson")
+@ComponentScan("com.revature")
 public class MetricsBucketApplication {
 
 	public static void main(String[] args) {
