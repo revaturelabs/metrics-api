@@ -1,6 +1,6 @@
 package dev.dickinson.controllers;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.nio.charset.StandardCharsets;
 
@@ -29,9 +29,10 @@ class BucketTest {
   @Autowired
   private AmazonClient amazonClient;
 
-  MultipartFile test = new MockMultipartFile("files", "filename.txt", "text/plain",
+  private MultipartFile test = new MockMultipartFile("files", "filename.txt", "text/plain",
       "hello".getBytes(StandardCharsets.UTF_8));
-  String testUrl = "";
+  private String testUrl = "";
+
 
   @Test
   void tokenCreationTest() {
@@ -42,7 +43,7 @@ class BucketTest {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      fail();
+      fail("failed in token creation");
     }
   }
 
@@ -53,17 +54,52 @@ class BucketTest {
     System.out.println(testUrl);
   }
 
-  @Test
-  @Order(2)
-  void listAllSprintFilesTest() {
-    System.out.println(amazonClient.listAllSprintFiles());
-  }
+
 
   @Test
   @Order(2)
   void deleteFileTest() {
     System.out.println(amazonClient.deleteFileFromS3Bucket(testUrl));
   }
+  
+  @Test
+  @Order(1)
+  //this test is inconclusive as returns void
+  void createProject() {
+    amazonClient.createProject("test_project_to_delete");
+  }
+
+//  @Test
+//  @Order(2)
+//  void addSprintTest() {
+//    
+//  }
+  
+//@Test
+//@Order(2)
+//void listAllSprintFilesTest() {
+//  System.out.println(amazonClient.listAllSprintFiles());
+//}
+  
+  @Test
+  @Order(4)
+  void deleteProjectTest() {
+    amazonClient.deleteProject("test_project_to_delete");
+  }
+  
+  
+//  @Test
+//  @Order(3)
+//  //need this to determine if the project created actually completed.
+//  void verifyProjectCreated() {
+//    String strToCheck = amazonClient." something here about check all projects "();
+//    
+//    //possibly change this to an expects
+//    if(strToCheck.contains("test_project_to_delete")){
+//     return; 
+//    }
+//    fail();
+//  }
 
   @Test
   void listSprintFilesByProjectTest() {
@@ -75,7 +111,6 @@ class BucketTest {
     System.out.println("listSprintFilesByFileNameTest() unimplemented");
   }
 }
-
 
 /*
  * public String listAllSprintFiles() { return objects.toString(); public String
