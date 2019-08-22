@@ -104,7 +104,7 @@ public class BucketHomePage {
 	@FindBy(id="update")
 	public WebElement editUpdate;
 
-	@FindBy(id="remove")
+	@FindBy(xpath="//*[@id=\"remove\"]")
 	public WebElement remove;
 
 	//XPATH will likely change. If test fails update this FIRST

@@ -37,6 +37,7 @@ public class EditReportStep {
 	public void the_user_removes_a_file() throws Throwable {
 		Thread.sleep(500);
 		homepage.deleteFile.click();
+		Thread.sleep(500);
 	}
 
 	@When("^The user adds a file$")
@@ -55,9 +56,10 @@ public class EditReportStep {
 
 	@Then("^The user clicks on delete Iteration$")
 	public void the_user_clicks_on_delete_Iteration() throws Throwable {
-		Thread.sleep(500);
+		Thread.sleep(2500);
 		homepage.remove.click();
-		Thread.sleep(500);
+		Thread.sleep(2500);
 		homepage.yes.click();
+		Thread.sleep(2500);
 	}
 }
