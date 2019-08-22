@@ -97,7 +97,10 @@ public class BucketHomePage {
 	
 	@FindBy(xpath="//*[@id=\"remove\"]")
 	public WebElement deleteFile;
-
+	
+	@FindBy(xpath="//*[@id=\"edit-reports\"]/app-edit-reports/div[2]/div/div/button[1]/input")
+	public WebElement editAddFile;
+	
 	@FindBy(id="update")
 	public WebElement editUpdate;
 
