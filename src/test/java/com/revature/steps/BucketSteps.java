@@ -17,7 +17,7 @@ import junit.framework.Assert;
 
 public class BucketSteps {
 	
-	// Run the test on Junit4!~!~!~!
+	// Run the test on Junit4!~!~!~!!
 	public static BucketHomePage homepage = BucketRunner.homepage;
 	public static WebDriver driver = BucketRunner.driver;
 
