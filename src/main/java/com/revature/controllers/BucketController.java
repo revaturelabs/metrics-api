@@ -4,11 +4,13 @@ import java.io.File;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,9 +109,12 @@ public class BucketController {
     	return this.amazonClient.countSprintFiles(projectName, sprintName);
     }
     
-    @RequestMapping(value="/downloadFile/{projectName}/{sprintName}/{fileName}", method=RequestMethod.GET)
-    public URL downloadFile(@PathVariable String projectName,@PathVariable String sprintName,@PathVariable String fileName) {
-    	return this.amazonClient.downloadFile(projectName, sprintName, fileName);
+    @RequestMapping(value="/downloadFile/{projectName}/{sprintName}/{fileName}",
+            method=RequestMethod.GET,
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public @ResponseBody byte[] downloadFile(@PathVariable String projectName, @PathVariable String sprintName, @PathVariable String fileName) {
+        System.out.println("downloadFile called in controller");
+        return this.amazonClient.downloadFile(projectName,sprintName,fileName);
     }
     
 }
