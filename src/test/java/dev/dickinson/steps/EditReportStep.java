@@ -10,14 +10,13 @@ import dev.dickinson.runners.BucketRunner;
 
 public class EditReportStep {
 
-	// Run the test on Junit4!~!~!~!
+	// Run the test on Junit4 ONLY!~!~!~!
 	public static BucketHomePage homepage = BucketRunner.homepage;
 	public static WebDriver driver = BucketRunner.driver;
 
 	@When("^The user selects a project$")
 	public void the_user_selects_a_project() throws Throwable {
 		Thread.sleep(1500);
-		//driver.findElement(By.xpath("//*[@id=\"project\"]")).click();
 		homepage.editProject.click();
 		Thread.sleep(1500);
 		homepage.editProjectSelector.click();

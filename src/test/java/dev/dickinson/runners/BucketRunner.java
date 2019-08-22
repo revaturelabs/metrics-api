@@ -17,6 +17,8 @@ import dev.dickinson.page.BucketHomePage;
 @CucumberOptions(features= "src/test/resources",glue ="dev.dickinson.steps")
 public class BucketRunner {
 
+	// Run the test on Junit4 ONLY!~!~!~!
+	
 	public static WebDriver driver;
 	public static BucketHomePage homepage;
 

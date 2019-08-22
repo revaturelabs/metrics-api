@@ -11,6 +11,7 @@ import dev.dickinson.runners.BucketRunner;
 import junit.framework.Assert;
 
 public class ViewReportStep {
+	
 	// Run the test on Junit4!~!~!~!
 	public static BucketHomePage homepage = BucketRunner.homepage;
 	public static WebDriver driver = BucketRunner.driver;
@@ -32,6 +33,7 @@ public class ViewReportStep {
 
 		boolean page = false;
 		try{
+			//XPATH can change. IF test fails update XPATH FIRST
 			driver.findElement(By.xpath("//*[@id=\"iterationView\"]/div[1]"));
 			Thread.sleep(1000);
 			page = true;
