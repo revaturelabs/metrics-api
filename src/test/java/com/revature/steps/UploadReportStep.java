@@ -1,13 +1,14 @@
-package dev.dickinson.steps;
+package com.revature.steps;
 
 import java.io.File;
 
 import org.openqa.selenium.WebDriver;
 
+import com.revature.page.BucketHomePage;
+import com.revature.runners.BucketRunner;
+
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import dev.dickinson.page.BucketHomePage;
-import dev.dickinson.runners.BucketRunner;
 
 public class UploadReportStep {
 	// Run the test on Junit4!~!~!~!

@@ -1,4 +1,4 @@
-package dev.dickinson.controllers;
+package com.revature.controllers;
 
 import static org.assertj.core.api.Assertions.fail;
 
@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import dev.dickinson.services.AmazonClient;
+import com.revature.services.AmazonClient;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -54,7 +54,8 @@ class BucketTest {
   @Test
   @Order(2)
   void deleteFileTest() {
-    System.out.println(amazonClient.deleteFileFromS3Bucket(testUrl));
+    //System.out.println(amazonClient.deleteFileFromS3Bucket(testUrl));
+	  System.out.println(amazonClient.deleteFileFromS3Bucket("files", "text/plain", "filename.txt"));
   }
 
   @Test
@@ -99,7 +100,7 @@ class BucketTest {
   @Test
   @Order(6)//verify that the files placed in the sprint
   void listAllSprintFilesTest() {
-    String testString = amazonClient.listAllSprintFiles();
+    String testString = amazonClient.listAllSprints();
     if(testString.contains("filename.txt")) {
       
     }else {

@@ -1,4 +1,4 @@
-package dev.dickinson.page;
+package com.revature.page;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
