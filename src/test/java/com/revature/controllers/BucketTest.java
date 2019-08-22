@@ -40,6 +40,7 @@ class BucketTest {
       }
     } catch (Exception e) {
       e.printStackTrace();
+      //This will always fail when run on the local machine. Requires global variables of EC2
       fail("failed in token creation");
     }
   }
@@ -96,17 +97,29 @@ class BucketTest {
       fail("failed to find the file in our sprint");
     }
   }
-
+  
   @Test
-  @Order(6)//verify that the files placed in the sprint
-  void listAllSprintFilesTest() {
-    String testString = amazonClient.listAllSprints();
-    if(testString.contains("filename.txt")) {
-      
-    }else {
-      fail("failed to find the file in our sprint");
-    }
+  @Order(6)
+  void deleteSprintFile() {
+	  amazonClient.deleteSprint("test_project_to_delete","test_sprint_to_delete");
   }
+  
+  @Test
+  @Order(7)
+  void deleteProjectFile() {
+	  amazonClient.deleteProject("test_project_to_delete");
+  }
+
+//  @Test
+//  @Order(6)//verify that the files placed in the sprint
+//  void listAllSprintFilesTest() {
+//    String testString = amazonClient.listAllSprints();
+//    if(testString.contains("filename.txt")) {
+//      
+//    }else {
+//      fail("failed to find the file in our sprint");
+//    }
+//  }
 
 
 }
