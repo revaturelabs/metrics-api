@@ -293,59 +293,31 @@ public class AmazonClient {
 		return "Successfully deleted";
 	}
 
-	public URL downloadFile(String projectName, String sprintName, String fileName) {
-		
-		GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucketName, projectName+"/"+sprintName+"/report/"+fileName)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(null);
-        URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
-        System.out.println(url);
-        return url;
-		
-	}
-////        String bucketName = "metricbuckettest";
-//		
-//		projectName = "Project1";
-//		sprintName = "Sprint1";
-//		fileName = "derserserterstferl.txt";
-//		
-//		File newFile = new File(fileName);
-//
-//		try {
-////            S3Object o = s3client.getObject(new GetObjectRequest(bucketName, folderPath + "/" + fileName));
-//			S3Object o = s3client.getObject(
-//					new GetObjectRequest(bucketName, projectName + "/" + sprintName + "/report/" + fileName));
-//			S3ObjectInputStream s3is = o.getObjectContent();
-//			
-//			System.out.println(o);
-//			
-////			File newFile = new File(fileName);
-//			
-//			
-//			// Save the file to the Desktop
-////			FileOutputStream fos = new FileOutputStream(new File(fileName));
-//			FileOutputStream fos = new FileOutputStream(newFile);
-//
-//			byte[] read_buf = new byte[1024];
-//			int read_len = 0;
-//			while ((read_len = s3is.read(read_buf)) > 0) {
-//				
-//				fos.write(read_buf, 0, read_len);
-//			}
-//			s3is.close();
-//			fos.close();
-//		} catch (AmazonServiceException e) {
-//			System.err.println(e.getErrorMessage());
-//		} catch (FileNotFoundException e) {
-//			System.err.println(e.getMessage());
-//		} catch (IOException e) {
-//			System.err.println(e.getMessage());
-//		}
-//
-//		return newFile;
-////		return new File("This is not the actual file");
-//	}
+	public byte[] downloadFile(String projectName, String sprintName, String fileName) {
+        File newFile = new File(fileName);
+        try {
+            S3Object o = s3client.getObject(
+                    new GetObjectRequest(bucketName, projectName + "/" + sprintName + "/report/" + fileName));
+            S3ObjectInputStream s3is = o.getObjectContent();
+            System.out.println(o);
+            FileOutputStream fos = new FileOutputStream(newFile);
+            byte[] read_buf = new byte[1024];
+            int read_len = 0;
+            while ((read_len = s3is.read(read_buf)) > 0) {
+                fos.write(read_buf, 0, read_len);
+            }
+            s3is.close();
+            fos.close();
+            return read_buf;
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
 	
 	
 }
