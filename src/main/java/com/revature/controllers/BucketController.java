@@ -1,5 +1,8 @@
 package com.revature.controllers;
 
+import java.io.File;
+import java.net.URL;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,6 +105,11 @@ public class BucketController {
     @RequestMapping(value="/countSprintFiles/{projectName}/{sprintName}", method=RequestMethod.GET)
     public int countSprintFiles(@PathVariable String projectName, @PathVariable String sprintName) {
     	return this.amazonClient.countSprintFiles(projectName, sprintName);
+    }
+    
+    @RequestMapping(value="/downloadFile/{projectName}/{sprintName}/{fileName}", method=RequestMethod.GET)
+    public URL downloadFile(@PathVariable String projectName,@PathVariable String sprintName,@PathVariable String fileName) {
+    	return this.amazonClient.downloadFile(projectName, sprintName, fileName);
     }
     
 }
