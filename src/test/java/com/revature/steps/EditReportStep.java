@@ -52,6 +52,7 @@ public class EditReportStep {
 	public void the_user_clicks_on_update_file() throws Throwable {
 		Thread.sleep(500);
 		homepage.editUpdate.click();
+		Thread.sleep(500);
 	}
 
 	@Then("^The user clicks on delete Iteration$")

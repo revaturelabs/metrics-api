@@ -51,7 +51,7 @@ public class UploadReportStep {
 		homepage.project.click();
 		Thread.sleep(200);
 		homepage.uploadprojectSelector.click();
-		homepage.iteration.sendKeys("45");
+		homepage.iteration.sendKeys("Test");
 	}
 
 	@When("^The user clicks on Upload Files$")
