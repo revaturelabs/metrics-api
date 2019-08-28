@@ -1,3 +1,8 @@
+Make sure that you're on the us-east-1 region. Otherwise some things (like Postman and the backend) don't work.
+reference this link for a potential solution: https://github.com/aws/aws-sdk-java/issues/1451 (cross-region behaviour)
+
+Make sure to view this file as a Markdown file, some things are incorrect when copied/pasted as plain text.
+
 steps:
 ============
 Create Policy:
@@ -37,6 +42,8 @@ create IAM user:
 * Click Attach existing policies directly
 * Search for the policy you have just created (you may need to hit the refresh button above the policies list)
 * Click the checkbox selecting that policy
+* Search for the AmazonS3FullAccess error
+* Click the checkbox selecting that policy
 * Click Next: Tags
 * Click Next: Review
 * Click Create User
@@ -73,11 +80,13 @@ create an s3 bucket
   ```
 * Click Save
 * Click Bucket Policy
-* Click Policy Generator in the lower left
+* Click Policy Generator in the lower left (You will need to create two policies using the Policy Generator, and merge them)
+
+The First Policy:
 * for Select Type of Policy select: S3 Bucket policy
-* For Principal enter your IAM user ARN (located in the .csv file generated when you created the IAM user)
+* For Principal enter your IAM user ARN (located in the .csv file generated when you created the IAM user, and when you click on the User)
  * Search for IAM from the AWS console
- * Click on the chosen user
+ * Click on the chosen user (that you created)
  * User ARN is displayed on that page
 * AWS Service: Amazon S3
 * Actions: all actions
@@ -87,12 +96,20 @@ create an s3 bucket
  * Wait for the menu to slide on the screen from the right
  * click Copy Bucket ARN
 * Click Add Statement
+
+The Second Policy:
+* for Select Type of Policy select: S3 Bucket policy
+* For Principal enter your IAM Role ARN  (click on the Role in IAM and the ARN should be listed)
+* AWS Service: Amazon S3
+* Actions: all actions
+* Amazon Resource Name: The buckets ARN
+* Click Add Statement
 * Click Generate Policy
 * Copy the displayed JSON
 * Go back to the Bucket Policy (please see previous steps)
 * Paste the JSON into the text field and save
 
-Create an EC2:
+Create an EC2: (Add things about creating and puttygening a new key pair)
 -------------
 * Login to your AWS account
 * Search for EC2
@@ -194,7 +211,7 @@ amazonProperties:
         accessKey: (User .csv AccessKey)
         secretKey: (User .csv SecretKey)
         bucketName: (bucket name)
- ```
+```
 *IMPORTANT NOTE: This .yml file is extremley picky about whitespace, ONE leading tab on each line. Spaces will cause it to parse incorretly.
 
 -------------
@@ -208,11 +225,28 @@ cd /home/ec2-user/.jenkins/workspace
 cd yourbuildfolder
 #build your .jar file
 mvn package
+#If the tests fail, you can build it without running the tests, using: 
+mvn -Dmaven.test.skip=true package
 #Navigate to the (newly) created target folder
 cd target
 #Run the .jar
 java -jar yoursnapshot.jar
 ```
+
 * Current implementation creates the tomcat server on port 9999, this assignment is in the application.properties file in the application resource folder.
 
+----------
+potential/expected errors
+----------
+Association of user after EC2 creation may not update. A server (EC2) restart may be necessary.
 
+Restarting EC2 will change endpoint URL (IP change), all related URLS must now be updated.
+
+Attempting to run locally will not generate Auth Tokens, this is because certain environment variables are required that the EC2 has inherintley.
+
+MVN package build fails, as a result of tests failing. If this happens, make sure to run with suppressed tests (-Dmaven.test.skip=true)
+MAKE SURE THAT YOU BUILD IT ON THE US_EAST_1 REGION. You can make it cross-region, but we didn't get there.
+
+If you have to restart anything, make sure all regions/URLS are correct between all files. (This includes Jenkins webhooks if you add build automation.
+
+If Jenkins for some reason is unavailible, make sure that the associated Tomcat server is running (See EC2 setup, a line inside the bash commands './startup.sh' in apache-tomcat bin)
