@@ -239,6 +239,12 @@ java -jar yoursnapshot.jar
 * Current implementation creates the tomcat server on port 9999, this assignment is in the application.properties file in the application resource folder.
 
 ----------
+Launching the Front-End
+----------
+
+*Navigate to: https://github.com/revaturelabs/metrics-bucket and follow the README
+
+----------
 potential/expected errors
 ----------
 Association of user after EC2 creation may not update. A server (EC2) restart may be necessary.
