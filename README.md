@@ -1,4 +1,4 @@
-Make sure that you're on the us-east-1 region. Otherwise some things (like Postman and the backend) don't work.
+**Make sure that you're on the us-east-1 region (US East N. Virginia).** Otherwise some things (like Postman and the backend) don't work.
 reference this link for a potential solution: https://github.com/aws/aws-sdk-java/issues/1451 (cross-region behaviour)
 
 Make sure to view this file as a Markdown file, some things are incorrect when copied/pasted as plain text.
