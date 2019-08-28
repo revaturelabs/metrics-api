@@ -25,9 +25,11 @@ Create Role:
 * Click Roles on the left
 * Under '' "Choose the service that will use this role" '' select ec2
 * Click Next: Permissions
-* Find and add AmazonS3FullAccess, and CreateUser
-* Click Next: Tags
-* Click Next: Review
+* Find and add: 
+    AmazonS3FullAccess
+    CreateUser (The policy you just created)
+* Click "Next: Tags"
+* Click "Next: Review"
 * Add a Role Name, this guide assumes the name is s3AccessRole
 
 create IAM user:
@@ -42,12 +44,13 @@ create IAM user:
 * Click Attach existing policies directly
 * Search for the policy you have just created (you may need to hit the refresh button above the policies list)
 * Click the checkbox selecting that policy
-* Search for the AmazonS3FullAccess error
+* Search for the AmazonS3FullAccess
 * Click the checkbox selecting that policy
 * Click Next: Tags
 * Click Next: Review
 * Click Create User
-* Click Download .csv (you will need this later)
+* **Click Download .csv** (you **will** need this later)
+* Click Close
 
 create an s3 bucket
 -------------
@@ -55,14 +58,15 @@ create an s3 bucket
 * Search for S3
 * Click Create a Bucket.
 * Enter a Bucket Name
+* **Make sure the region is US East N. Virginia**
 * Click Next
 * Click Next
-* Select Block All Public Access
+* Select Block All Public Access (If it hasn't been selected already)
 * Click Next
 * Click Create Bucket
 * Click your new bucket name
 * Click Permissions
-* Click Cors Configuration and paste the below
+* Click Cors Configuration (After clicking Permissions) and paste the XML below
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -78,67 +82,63 @@ create an s3 bucket
 </CORSRule>
 </CORSConfiguration>
   ```
-* Click Save
-* Click Bucket Policy
-* Click Policy Generator in the lower left (You will need to create two policies using the Policy Generator, and merge them)
+* Click Save.
+* Click Bucket Policy.
+* Click Policy Generator in the lower left.
 
-The First Policy:
-* for Select Type of Policy select: S3 Bucket policy
-* For Principal enter your IAM user ARN (located in the .csv file generated when you created the IAM user, and when you click on the User)
- * Search for IAM from the AWS console
- * Click on the chosen user (that you created)
- * User ARN is displayed on that page
-* AWS Service: Amazon S3
-* Actions: all actions
-* Amazon Resource Name: The buckets ARN
- * Search for S3 from the AWS console
- * Select the chosen S3
- * Wait for the menu to slide on the screen from the right
- * click Copy Bucket ARN
-* Click Add Statement
+The First Policy: (This is a policy for the **User**)
+* for Select Type of Policy select: S3 Bucket policy.
+* For Principal enter your IAM user ARN (click on the User in the IAM).
+ * Search for IAM from the AWS console.
+ * Click on the chosen user (that you created).
+ * User ARN is displayed on that page.
+* AWS Service: Amazon S3.
+* Actions: all actions.
+* Amazon Resource Name: The buckets ARN (Navigate to the main S3 page, click on the bucket row (not the name!)).
+ * click Copy Bucket ARN.
+* Click Add Statement.
 
-The Second Policy:
-* for Select Type of Policy select: S3 Bucket policy
-* For Principal enter your IAM Role ARN  (click on the Role in IAM and the ARN should be listed)
-* AWS Service: Amazon S3
-* Actions: all actions
-* Amazon Resource Name: The buckets ARN
-* Click Add Statement
-* Click Generate Policy
-* Copy the displayed JSON
-* Go back to the Bucket Policy (please see previous steps)
-* Paste the JSON into the text field and save
+The Second Policy: (making the same thing, but for the **role** this time)
+* for Select Type of Policy select: S3 Bucket policy.
+* For Principal enter your IAM Role ARN  (click on the Role in IAM and the ARN should be listed).
+* AWS Service: Amazon S3.
+* Actions: all actions.
+* Amazon Resource Name: The buckets ARN.
+* Click Add Statement.
+* Click Generate Policy, and **copy** this JSON.
+* Go back to the Bucket Policy page.
+* Paste the JSON into the text field and save.
 
 Create an EC2: (Add things about creating and puttygening a new key pair)
 -------------
 * Login to your AWS account
 * Search for EC2
+* **Make sure you're on the N.Virginia US East EC2 server**
 * Click Launch instance
 * Click Select on "Amazon Linux 2 AMI (HVM), SSD Volume Type"
-* Unless paid for you want to ensure that you click on the free tier option, then click Next: Configure instance variables
+* Unless paid for you want to ensure that you click on the free tier option, then click "Next: Configure Instance Details"
 * Change the IAM Access Role to s3AccessRole that you created
-* Click Next: Add storage, then Next: Add Tags, then Next: Configure Security Group
-* Click Add rule and fill out the fields using the following information
+* Click "Next: Add storage", then "Next: Add Tags", then "Next: Configure Security Group"
+* Click Add rule and fill out the fields using the following information:
 
-| Type            | Protocol | Port Range | Source    | Description |
-|-----------------|----------|------------|-----------|-------------|
-| Custom TCP Rule | TCP      | 8080       | 0.0.0.0/0 |             |
-| Custom TCP Rule | TCP      | 8080       | ::/0      |             |
-| Custom TCP Rule | TCP      | 9999       | ::/0      |             |
-| Custom TCP Rule | TCP      | 9999       | 0.0.0.0/0 |             |
-| SSH             | TCP      | 22         | 0.0.0.0/0 |             |
-| SSH             | TCP      | 22         | ::/0      |             |
+| Type            | Protocol | Port Range | Source          | Description |
+|-----------------|----------|------------|-----------------|-------------|
+| Custom TCP Rule | TCP      | 8080       | 0.0.0.0/0, ::/0 |             |
+| Custom TCP Rule | TCP      | 9999       | 0.0.0.0/0, ::/0 |             |
+| SSH             | TCP      | 22         | 0.0.0.0/0, ::/0 |             |
 
 * please note that this is extremely insecure, you will want to update this to better rules as needed
 * Click Review and launch
 * Click Launch
+* If you already have a key:pair, you can use that, otherwise, create a new one.
 * Select a PPK and click launch
 * If you need further information please consult https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html
 
 EC2 setup
 -------------
 * Connect to EC2 via SSH (Putty Recommended) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html
-* Copy and paste the following once logged in:
+* Make sure to use the public DNS under the description of your EC2
+* Copy and paste the following once logged in: (You will need to press enter once it hits "aws configure")
 ```bash
 #Install Maven
 sudo yum install -y maven
@@ -174,12 +174,14 @@ Setting up Jenkins on your EC2
 -------------
 * Navigate to your AWS EC2 page
 * Click on your EC2 instance
-* On the Description, copy the Public DNS and paste it into a new URL
-* Add :8080/jenkins to the end of the URL and travel to the destination
+* On the Description, copy the Public DNS and paste it into a new URL and add ":8080/jenkins" to the end of the URL
+* Navigate to the URL
 * You will be prompted to setup Jnekins by first supplying the initialAdminPassword
-* It will give you the path on the EC2 you need to reach in order to reach the file containing the password password
+* It will give you the path on the EC2 you need to reach in order to reach the file:
+* vim/nano to the entire path, or cd to the folder just before "initialAdminPassword"
 * open the file via any means
 * Copy that string into the input given by Jenkins on your browser
+* Install suggested Plugins.
 * assign an appropriate username, password, and email
 
 -------------
@@ -207,7 +209,7 @@ cd src/main/resources
 * create a new file, application.yml, and copy this into it:
 ```bash
 amazonProperties:
-        endpointUrl: (Your bucket endpoint)
+        endpointUrl: (Your bucket endpoint) (can find this under S3 static hosting)
         accessKey: (User .csv AccessKey)
         secretKey: (User .csv SecretKey)
         bucketName: (bucket name)
