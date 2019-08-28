@@ -183,6 +183,7 @@ Setting up Jenkins on your EC2
 * Copy that string into the input given by Jenkins on your browser
 * Install suggested Plugins.
 * assign an appropriate username, password, and email
+* Save and continue
 
 -------------
 Using Jenkins to download metrics-api to your EC2
@@ -190,7 +191,7 @@ Using Jenkins to download metrics-api to your EC2
 * Create a new item by clicking on New Item in the upper left
 * Select a new Freestyle Project, give it a name, and click okay at the bottom.
 * On the next page, under General, check the GitHub project checkbox
-* Get the Metrics-api Github URL and paste it here
+* Get the Metrics-api Github URL (clone URL) and paste it here
 * Under Source Code Management, select the Git radio button
 * Paste the Repository URL here, keep everything else default (currently just using master branch)
 * Click save
@@ -202,14 +203,14 @@ create .yml file
 ```bash
 #Navigate to your Jenkins workspace, then your build folder
 cd /home/ec2-user/.jenkins/workspace
-cd yourbuildfolder
+cd TheJenkinsBuildNameYouChose
 #Navigate to the application's resource folder
 cd src/main/resources
 ```
 * create a new file, application.yml, and copy this into it:
 ```bash
 amazonProperties:
-        endpointUrl: (Your bucket endpoint) (can find this under S3 static hosting)
+        endpointUrl: (Your bucket endpoint) (can find this under your S3/Properties/static hosting section)
         accessKey: (User .csv AccessKey)
         secretKey: (User .csv SecretKey)
         bucketName: (bucket name)
@@ -224,10 +225,10 @@ Launching Metrics-API on your EC2
 #Navigate to your Jenkins workspace
 cd /home/ec2-user/.jenkins/workspace
 #Navigate into your build folder
-cd yourbuildfolder
+cd TheJenkinsBuildNameYouChose
 #build your .jar file
 mvn package
-#If the tests fail, you can build it without running the tests, using: 
+#**If the tests fail**, you can build it without running the tests, using: 
 mvn -Dmaven.test.skip=true package
 #Navigate to the (newly) created target folder
 cd target
