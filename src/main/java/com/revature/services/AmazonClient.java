@@ -110,6 +110,7 @@ public class AmazonClient {
 		return returnData;
 	}
 
+	//returns a String of all just the sprint folder names.
 	public String listAllSprints() {
 
 		ObjectListing ol = s3client.listObjects(bucketName);
@@ -126,6 +127,7 @@ public class AmazonClient {
 		return sprints.toString();
 	}
 
+	//returns a String of all the sprint folder names inside of the provided project
 	public String listAllSprintsByProject(String projectName) {
 
 		ObjectListing ol = s3client.listObjects(bucketName);
@@ -142,6 +144,7 @@ public class AmazonClient {
 		return sprints.toString();
 	}
 
+	//returns a String of all the file names contained within a sprint
 	public String listAllFilesBySprint(String projectName, String sprintName) {
 
 		ObjectListing ol = s3client.listObjects(bucketName);
@@ -160,6 +163,7 @@ public class AmazonClient {
 		return sprints.toString();
 	}
 
+	//returns a String of all the files in a project.
 	public String listSprintFilesByProject(String projectName) {
 
 		ObjectListing ol = s3client.listObjects(bucketName, projectName + "/");
@@ -172,6 +176,7 @@ public class AmazonClient {
 		return objects.toString();
 	}
 
+	//creates a project folder with nothing in it.
 	public void createProject(String projectName) {
 		try {
 
@@ -186,6 +191,7 @@ public class AmazonClient {
 		}
 	}
 
+	//Creates a sprint folder inside an existing project and then creates a report folder inside of that sprint folder
 	public void createSprint(String projectName, String sprintName) {
 		String reportName = "report";
 
@@ -205,6 +211,7 @@ public class AmazonClient {
 		}
 	}
 
+	//uploads a report file to an existing sprint's report folder.
 	public String uploadReportFile(String projectName, String sprintName, MultipartFile multipartFile) {
 		final String reportName = "report";
 
@@ -222,6 +229,7 @@ public class AmazonClient {
 		return fileUrl;
 	}
 
+	//Uploads multiple files to a sprint report folder.
 	public void uploadMultipleFiles(String projectName, String sprintName, MultipartFile[] file) {
 
 		for (MultipartFile f : file) {
@@ -229,6 +237,7 @@ public class AmazonClient {
 		}
 	}
 
+	//Deletes a project and everything in it.
 	public void deleteProject(String projectName) {
 		ObjectListing ol = s3client.listObjects(bucketName);
 		List<S3ObjectSummary> objects = ol.getObjectSummaries();
@@ -241,6 +250,7 @@ public class AmazonClient {
 
 	}
 
+	//Deletes a sprint folder and everything in it.
 	public void deleteSprint(String projectName, String sprintName) {
 		ObjectListing ol = s3client.listObjects(bucketName);
 		List<S3ObjectSummary> objects = ol.getObjectSummaries();
@@ -252,6 +262,7 @@ public class AmazonClient {
 		}
 	}
 
+	//returns the number of sprint folders in a project.
 	public int countSprints(String projectName) {
 		int count = 0;
 
@@ -268,6 +279,7 @@ public class AmazonClient {
 		return count;
 	}
 
+	//returns the number of files in a sprint folder.
 	public int countSprintFiles(String projectName, String sprintName) {
 		int count = 0;
 
@@ -287,12 +299,15 @@ public class AmazonClient {
 		return count;
 	}
 
+	//deletes a specified file within the provided project and sprint folders.
 	public String deleteFileFromS3Bucket(String projectName, String sprintName, String fileName) {
 		s3client.deleteObject(
 				new DeleteObjectRequest(bucketName, projectName + "/" + sprintName + "/report/" + fileName));
 		return "Successfully deleted";
 	}
 
+	//Returns a byte array representing the file to download.
+	//Could be improved by returning a link to download the file directly from the S3 client-side instead.
 	public byte[] downloadFile(String projectName, String sprintName, String fileName) {
         File newFile = new File(fileName);
         try {
