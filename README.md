@@ -259,3 +259,12 @@ MAKE SURE THAT YOU BUILD IT ON THE US_EAST_1 REGION. You can make it cross-regio
 If you have to restart anything, make sure all regions/URLS are correct between all files. (This includes Jenkins webhooks if you add build automation.
 
 If Jenkins for some reason is unavailible, make sure that the associated Tomcat server is running (See EC2 setup, a line inside the bash commands './startup.sh' in apache-tomcat bin)
+
+-----------
+Things that need to be done
+-----------
+Add cross-region functionality: Currently the front-end, backend, all must be on "us-east-1" in order to function properly. Try to get the front end up and running on "us-east-2" by changing the environement variable on a metrics-bucket and going from there.
+
+Change the EC2 security group to only revature IP's: Currently it's open to the world, change that both in the README, and whatever EC2 you end up using.
+
+Setup and add documentation for automatic Jenkins builds: Use webhooks with GitHub and write some scripts on the EC2 server that maintain an active server (restarts it if it exits), restarts the server after a successful Jenkin's build, and kills the server (if it exists) right before Jenkin's restarts the server (so that there are no "port already in use" errors).
