@@ -3,7 +3,7 @@ reference this link for a potential solution: https://github.com/aws/aws-sdk-jav
 
 Make sure to view this file as a Markdown file, some things are incorrect when copied/pasted as plain text.
 
-steps:
+Steps:
 ============
 Create Policy:
 -------------
@@ -32,7 +32,7 @@ Create Role:
 * Click "Next: Review"
 * Add a Role Name, this guide assumes the name is s3AccessRole
 
-create IAM user:
+Create IAM user:
 -------------
 * Login to your AWS account
 * Search for IAM
@@ -52,7 +52,7 @@ create IAM user:
 * **Click Download .csv** (you **will** need this later)
 * Click Close
 
-create an s3 bucket
+Create an s3 bucket
 -------------
 * Login to your AWS account
 * Search for S3
@@ -198,7 +198,7 @@ Using Jenkins to download metrics-api to your EC2
 * Click Build Now
 
 -------------
-create .yml file
+Create .yml file
 -------------
 ```bash
 #Navigate to your Jenkins workspace, then your build folder
@@ -245,7 +245,7 @@ Launching the Front-End
 *Navigate to: https://github.com/revaturelabs/metrics-bucket and follow the README
 
 ----------
-potential/expected errors
+Potential/Expected Errors
 ----------
 Association of user after EC2 creation may not update. A server (EC2) restart may be necessary.
 
